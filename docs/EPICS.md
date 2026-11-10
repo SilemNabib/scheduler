@@ -29,6 +29,10 @@ Cada historia lleva:
 | **Criterios** | Lo mínimo que debe cumplirse para darla por buena. El detalle exacto está en las reglas citadas. |
 | **Refs** | Funcionalidades, reglas y decisiones del PRD, y secciones de ARCH o DESIGN. |
 
+### Avance
+
+Una historia terminada lleva ✅ al inicio de su título, por ejemplo: **✅ RES-03. Elegir el día** · MVP. Una épica lleva ✅ cuando todas sus historias MVP están terminadas. Lo que no tiene ✅ sigue pendiente.
+
 ### Actores
 
 | Actor | Quién es | Cómo entra |

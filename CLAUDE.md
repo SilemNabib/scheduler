@@ -18,7 +18,7 @@ El usuario entrega las historias de usuario **una a una** (por ejemplo, `RES-03`
    Una vez decidida, se actualiza STACK.md: la tecnología pasa a **Definido**, o se agrega a la sección de descartadas.
 4. **Desarrollar de punta a punta.** Esto incluye la base de datos y las migraciones, el dominio, la API, la UI, los correos si aplica, y las pruebas que exigen los criterios.
 5. **Verificar.** Correr lint, tipos y pruebas, y comprobar el flujo en la app. Si algo no se pudo verificar, decirlo.
-6. **Cerrar la historia.** Reportar qué se hizo, cómo se cumple cada criterio de aceptación, las decisiones tomadas y lo que quedó pendiente.
+6. **Cerrar la historia.** Reportar qué se hizo, cómo se cumple cada criterio de aceptación, las decisiones tomadas y lo que quedó pendiente. Marcar la historia con ✅ en EPICS.md, y también su épica si ya están terminadas todas sus historias MVP (ver "Avance" en EPICS.md).
 
 Una historia no se da por terminada mientras tenga preguntas abiertas sin respuesta.
 
