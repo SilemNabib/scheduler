@@ -21,3 +21,7 @@ El usuario entrega las historias de usuario **una a una** (por ejemplo, `RES-03`
 6. **Cerrar la historia.** Reportar qué se hizo, cómo se cumple cada criterio de aceptación, las decisiones tomadas y lo que quedó pendiente.
 
 Una historia no se da por terminada mientras tenga preguntas abiertas sin respuesta.
+
+## Commits
+
+Todo commit se hace con la skill `/anthropic-skills:sncommit`, nunca con `git commit` a mano. Los mensajes no llevan la línea `Co-Authored-By` ni otra atribución a Claude.
