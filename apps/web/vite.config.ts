@@ -10,7 +10,7 @@ export default defineConfig({
   },
   server: {
     port: 5173,
-    // En desarrollo, la API la atiende `wrangler dev` (apps/worker).
+    // In development, the API is served by `wrangler dev` (apps/worker).
     proxy: { "/api": "http://localhost:8787" },
   },
 });

@@ -4,7 +4,7 @@
   "main": "src/index.ts",
   "compatibility_date": "2026-11-01",
   "compatibility_flags": ["nodejs_compat"],
-  // El SPA (apps/web) se sirve como assets. Solo /api/* pasa primero por el Worker.
+  // The SPA (apps/web) is served as static assets. Only /api/* hits the Worker first.
   "assets": {
     "directory": "../web/dist",
     "binding": "ASSETS",

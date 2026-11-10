@@ -22,6 +22,17 @@ El usuario entrega las historias de usuario **una a una** (por ejemplo, `RES-03`
 
 Una historia no se da por terminada mientras tenga preguntas abiertas sin respuesta.
 
+## Idioma
+
+| Qué | Idioma |
+|---|---|
+| Código: nombres de archivos y carpetas, componentes, funciones, variables, tipos, tablas, columnas, rutas de la API, códigos de error y comentarios | Inglés |
+| Mensajes de commit, nombres de ramas y de jobs de CI | Inglés |
+| Texto que ve el usuario final: etiquetas, botones, mensajes, correos (por ejemplo, "Iniciar sesión") | Español |
+| Documentos de `docs/`, `CLAUDE.md` y el chat con el usuario | Español |
+
+Las rutas que ve el usuario en el navegador siguen el producto: `/panel`, `/login`, `/registro` y `/{slug}` (EPICS.md).
+
 ## Commits
 
-Todo commit se hace con la skill `/anthropic-skills:sncommit`, nunca con `git commit` a mano. Los mensajes no llevan la línea `Co-Authored-By` ni otra atribución a Claude.
+Todo commit se hace con la skill `/anthropic-skills:sncommit`, nunca con `git commit` a mano. Los mensajes van en inglés y no llevan la línea `Co-Authored-By` ni otra atribución a Claude.

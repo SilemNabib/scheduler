@@ -3,7 +3,7 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* Tokens base de shadcn/ui. La marca de cada negocio los sobrescribe en la página pública. */
+/* Base shadcn/ui tokens. Each business's brand overrides them on its public page. */
 :root {
   --radius: 0.625rem;
   --background: oklch(1 0 0);

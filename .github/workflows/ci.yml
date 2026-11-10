@@ -1,4 +1,4 @@
-name: CI y despliegue
+name: CI and deploy
 
 on:
   pull_request:
@@ -10,7 +10,7 @@ concurrency:
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
-  verificar:
+  verify:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -29,13 +29,13 @@ jobs:
           path: apps/web/dist
           retention-days: 1
 
-  desplegar:
+  deploy:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    needs: verificar
+    needs: verify
     runs-on: ubuntu-latest
     environment: production
     concurrency:
-      group: despliegue-produccion
+      group: deploy-production
       cancel-in-progress: false
     steps:
       - uses: actions/checkout@v4
