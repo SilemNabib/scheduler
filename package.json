@@ -1,0 +1,14 @@
+{
+  "name": "agenda-citas",
+  "private": true,
+  "packageManager": "pnpm@12.18.0",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "dev": "pnpm -r --parallel run dev",
+    "build": "pnpm --filter web run build",
+    "typecheck": "pnpm -r run typecheck",
+    "deploy": "pnpm run build && pnpm --filter worker run deploy"
+  }
+}
