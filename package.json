@@ -1,6 +1,6 @@
 {
   "name": "agenda-citas",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "private": true,
   "packageManager": "pnpm@12.18.0",
   "engines": {
@@ -10,6 +10,9 @@
     "dev": "pnpm -r --parallel run dev",
     "build": "pnpm --filter web run build",
     "typecheck": "pnpm -r run typecheck",
-    "deploy": "pnpm run build && pnpm --filter worker run deploy"
+    "deploy": "pnpm run build && pnpm --filter worker run deploy",
+    "test": "pnpm -r run test",
+    "db:migrate": "pnpm --filter @agenda/db run migrate",
+    "db:generate": "pnpm --filter @agenda/db run generate"
   }
 }

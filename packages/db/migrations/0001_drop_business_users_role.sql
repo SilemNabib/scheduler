@@ -1,0 +1,1 @@
+ALTER TABLE "business_users" DROP COLUMN "role";

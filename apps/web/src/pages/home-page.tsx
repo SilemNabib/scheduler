@@ -8,7 +8,7 @@ const API_STATUS_LABEL: Record<ApiStatus, string> = {
   error: "sin respuesta",
 };
 
-export function App() {
+export function HomePage() {
   const [apiStatus, setApiStatus] = useState<ApiStatus>("checking");
 
   useEffect(() => {

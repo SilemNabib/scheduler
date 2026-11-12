@@ -1,16 +1,23 @@
 import path from "node:path";
 import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
-import { defineConfig } from "vite";
+import { defineConfig, loadEnv } from "vite";
 
-export default defineConfig({
-  plugins: [react(), tailwindcss()],
-  resolve: {
-    alias: { "@": path.resolve(import.meta.dirname, "src") },
-  },
-  server: {
-    port: 5173,
-    // In development, the API is served by `wrangler dev` (apps/worker).
-    proxy: { "/api": "http://localhost:8787" },
-  },
+export default defineConfig(({ command, mode }) => {
+  // The key is baked into the bundle: without it, the app would deploy as a blank page.
+  if (command === "build" && !loadEnv(mode, import.meta.dirname, "VITE_").VITE_CLERK_PUBLISHABLE_KEY) {
+    throw new Error("Missing VITE_CLERK_PUBLISHABLE_KEY (see apps/web/.env.example)");
+  }
+
+  return {
+    plugins: [react(), tailwindcss()],
+    resolve: {
+      alias: { "@": path.resolve(import.meta.dirname, "src") },
+    },
+    server: {
+      port: 5173,
+      // In development, the API is served by `wrangler dev` (apps/worker).
+      proxy: { "/api": "http://localhost:8787" },
+    },
+  };
 });

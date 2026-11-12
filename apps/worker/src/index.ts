@@ -1,9 +1,4 @@
-import { Hono } from "hono";
+import { createApp } from "./app.ts";
+import { clerkAuth } from "./middleware/clerk-auth.ts";
 
-const app = new Hono<{ Bindings: Env }>().basePath("/api");
-
-app.get("/health", (c) => c.json({ ok: true }));
-
-app.notFound((c) => c.json({ error: "NOT_FOUND" }, 404));
-
-export default app;
+export default createApp({ auth: clerkAuth });

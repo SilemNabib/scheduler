@@ -12,6 +12,20 @@ concurrency:
 jobs:
   verify:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: agenda
+        ports:
+          - 54329:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d agenda"
+          --health-interval 2s
+          --health-timeout 3s
+          --health-retries 15
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -22,7 +36,11 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm --filter worker run types
       - run: pnpm run typecheck
+      - run: pnpm run test
       - run: pnpm run build
+        env:
+          # Public key, baked into the SPA at build time.
+          VITE_CLERK_PUBLISHABLE_KEY: ${{ vars.VITE_CLERK_PUBLISHABLE_KEY }}
       - uses: actions/upload-artifact@v4
         with:
           name: web-dist
@@ -49,6 +67,9 @@ jobs:
         with:
           name: web-dist
           path: apps/web/dist
+      - run: pnpm run db:migrate
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
       - run: pnpm --filter worker run deploy
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}

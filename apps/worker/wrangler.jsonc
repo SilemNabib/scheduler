@@ -1,17 +1,36 @@
 {
-  "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "agenda-citas",
-  "main": "src/index.ts",
-  "compatibility_date": "2026-11-01",
-  "compatibility_flags": ["nodejs_compat"],
-  // The SPA (apps/web) is served as static assets. Only /api/* hits the Worker first.
-  "assets": {
-    "directory": "../web/dist",
-    "binding": "ASSETS",
-    "not_found_handling": "single-page-application",
-    "run_worker_first": ["/api/*"]
-  },
-  "observability": {
-    "enabled": true
-  }
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "agenda-citas",
+	"main": "src/index.ts",
+	"compatibility_date": "2026-11-01",
+	"compatibility_flags": [
+		"nodejs_compat"
+	],
+	// The SPA (apps/web) is served as static assets. Only /api/* hits the Worker first.
+	"assets": {
+		"directory": "../web/dist",
+		"binding": "ASSETS",
+		"not_found_handling": "single-page-application",
+		"run_worker_first": [
+			"/api/*"
+		]
+	},
+	// Postgres (Neon) through Hyperdrive. Locally, `wrangler dev` and the tests use
+	// the Docker Postgres from docker-compose.yml.
+	"hyperdrive": [
+		{
+			"binding": "HYPERDRIVE",
+			// Created with `wrangler hyperdrive create agenda-citas` (Neon).
+			"id": "8a41d211e991445cad3aaeca87211b7c",
+			"localConnectionString": "postgres://postgres:postgres@localhost:54329/agenda"
+		}
+	],
+	"vars": {
+		// Origins whose Clerk tokens the API accepts (comma-separated).
+		// Locally, .dev.vars overrides it with the Vite and `wrangler dev` origins.
+		"APP_ORIGINS": "https://agenda-citas.silemnabib.workers.dev"
+	},
+	"observability": {
+		"enabled": true
+	}
 }

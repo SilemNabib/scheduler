@@ -119,7 +119,7 @@ Como **dueño invitado**, quiero definir mi contraseña desde el correo de invit
 - Nadie puede registrarse sin invitación.
 - *Refs:* F-05, PAN-01, D-08; ARCH §7.2, §7.4, ADR-05, ADR-06.
 
-**ACC-02. Iniciar y cerrar sesión** · MVP
+**✅ ACC-02. Iniciar y cerrar sesión** · MVP
 Como **dueño**, quiero entrar con mi correo y contraseña y cerrar sesión cuando termine, para proteger la información de mi negocio.
 - Sin sesión, `/panel` redirige a `/login`. Al cerrar sesión se vuelve a `/login`.
 - Un usuario con sesión válida pero sin negocio asignado ve la pantalla "sin acceso".
