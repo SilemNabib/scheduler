@@ -50,13 +50,13 @@ Una historia terminada lleva ✅ al inicio de su título, por ejemplo: **✅ RES
 | M2 | [Negocio, marca y sedes](#m2-negocio-marca-y-sedes) | `NEG` | La identidad del negocio y dónde atiende | Dueño | 6 + 1 |
 | M3 | [Servicios y recursos](#m3-servicios-y-recursos) | `SER` | Qué se ofrece y con qué capacidad | Dueño | 4 + 2 |
 | M4 | [Horarios y disponibilidad](#m4-horarios-y-disponibilidad) | `DIS` | Cuándo se atiende y qué horas están libres | Dueño, sistema | 6 |
-| M5 | [Reserva en línea](#m5-reserva-en-línea) | `RES` | Que el cliente reserve solo desde el celular | Cliente | 9 + 1 |
-| M6 | [Agenda y citas](#m6-agenda-y-citas) | `AGE` | Que el dueño gestione todas sus citas en un lugar | Dueño, sistema | 7 |
-| M7 | [Autogestión de la cita](#m7-autogestión-de-la-cita) | `AUT` | Que el cliente cancele o cambie su cita sin llamar | Cliente | 4 |
-| M8 | [Clientes y protección de datos](#m8-clientes-y-protección-de-datos) | `CLI` | Conocer a los clientes y cumplir la Ley 1581 | Dueño, sistema | 6 |
-| M9 | [Notificaciones y calendarios](#m9-notificaciones-y-calendarios) | `NOT` | Avisar a tiempo y llevar las citas al calendario | Cliente, dueño, sistema | 6 + 1 |
+| M5 | [Reserva en línea](#m5-reserva-en-línea) | `RES` | Que el cliente reserve solo desde el celular | Cliente | 9 + 2 |
+| M6 | [Agenda y citas](#m6-agenda-y-citas) | `AGE` | Que el dueño gestione todas sus citas en un lugar | Dueño, sistema | 8 |
+| M7 | [Autogestión de la cita](#m7-autogestión-de-la-cita) | `AUT` | Que el cliente cancele, cambie o confirme su cita sin llamar | Cliente | 5 |
+| M8 | [Clientes y protección de datos](#m8-clientes-y-protección-de-datos) | `CLI` | Conocer a los clientes y cumplir la Ley 1581 | Dueño, sistema | 6 + 2 |
+| M9 | [Notificaciones y calendarios](#m9-notificaciones-y-calendarios) | `NOT` | Avisar a tiempo y llevar las citas al calendario | Cliente, dueño, sistema | 6 + 3 |
 | M10 | [Suscripción y planes](#m10-suscripción-y-planes) | `SUS` | Qué puede usar cada negocio y qué pasa si no paga | Dueño, sistema | 4 + 1 |
-| M11 | [Operación del SaaS](#m11-operación-del-saas) | `OPE` | Dar de alta negocios, registrar pagos y vigilar la operación | Administrador | 6 |
+| M11 | [Operación del SaaS](#m11-operación-del-saas) | `OPE` | Dar de alta negocios, registrar pagos, vigilar la operación y dar soporte | Administrador, dueño | 7 |
 
 Además, hay requisitos que atraviesan todos los módulos (multi-negocio, hora local, seguridad, accesibilidad…). Están en la [sección 4](#4-requisitos-transversales).
 
@@ -218,6 +218,7 @@ Como **dueño**, quiero desactivar un servicio sin borrarlo, para dejar de ofrec
 Como **dueño**, quiero clasificar mis servicios en categorías, para que el cliente encuentre más rápido lo que busca.
 - El panel sugiere las categorías que ya existen, para evitar variantes del mismo nombre.
 - En la página pública, el cliente filtra con "Todos" y una opción por categoría. Sin categorías, no hay filtro.
+- Cada categoría tiene su propio link (por ejemplo, `/{slug}?categoria=faciales`), que abre la página con esa categoría elegida, y el panel lo muestra para copiarlo. Si la categoría ya no existe, la página se abre en "Todos".
 
 #### SER-E2. Capacidad
 
@@ -251,7 +252,7 @@ Este módulo contiene el **motor de disponibilidad**: la misma regla decide qué
 **DIS-01. Definir mi horario semanal** · MVP
 Como **dueño**, quiero definir para cada día de la semana una o varias franjas de atención, para incluir pausas como la hora del almuerzo.
 - Las franjas de un mismo día no se pueden solapar.
-- Cada franja es independiente: una cita debe caber completa en una sola franja, aunque dos franjas sean contiguas.
+- Cada franja es independiente: una cita debe caber completa en una sola franja, aunque dos franjas sean contiguas. Así se pueden fijar bloques: con franjas de 15:00 a 17:00 y de 17:00 a 19:00, un servicio de 120 minutos solo se ofrece a las 15:00 y a las 17:00.
 
 #### DIS-E2. Bloqueos
 
@@ -295,7 +296,7 @@ Como **dueño**, quiero que dos personas nunca puedan quedarse con el mismo últ
 
 **Propósito:** que el cliente reserve solo, a cualquier hora y desde el celular, en `tuapp.com/{slug}`.
 
-**Fuera del MVP:** elegir quién atiende y pagar en línea.
+**Fuera del MVP:** elegir quién atiende, reservar varios servicios a la vez y pagar en línea.
 
 #### RES-E1. Conocer el negocio y elegir el servicio
 
@@ -355,6 +356,12 @@ Como **cliente**, quiero ver a las personas que atienden el servicio, con su fot
 - Al elegir a alguien, solo veo sus horas libres. Con "Sin preferencia", veo las horas con al menos una persona libre y el sistema asigna una.
 - La confirmación dice quién me atenderá.
 
+#### RES-E6. Varios servicios
+
+**RES-11. Reservar varios servicios seguidos** · Posterior
+Como **cliente**, quiero elegir varios servicios en una sola reserva, para que me atiendan uno tras otro sin reservar cada uno por separado.
+- Requiere cambiar el modelo de la cita y el motor de disponibilidad (DIS-05).
+
 ---
 
 ### M6. Agenda y citas
@@ -370,9 +377,10 @@ Como **dueño**, quiero ver mis citas por día, por semana y por mes, para organ
 - Sin citas, la vista de día dice "No tienes citas hoy."
 
 **AGE-02. Ver el detalle de una cita** · MVP
-Como **dueño**, quiero ver el cliente, su contacto, el servicio, el estado, el código y el historial de cambios de una cita, para atenderla con toda la información.
+Como **dueño**, quiero ver el cliente, su contacto y cuántas veces ha faltado, el servicio, el estado, el código y el historial de cambios de una cita, para atenderla con toda la información.
 - El detalle muestra solo las acciones que la cita permite en ese momento.
 - Puedo encontrar una cita por su código de reserva cuando el cliente me lo dicta.
+- En una cita confirmada, "Enviar por WhatsApp" abre mi WhatsApp con un mensaje listo para el celular del cliente: el negocio, el servicio, la fecha, la hora, la dirección, el código y el link de gestión. Yo decido si lo envío. Sirve aunque el cliente no tenga correo, y también para recordarle la cita.
 
 #### AGE-E2. Citas manuales
 
@@ -381,7 +389,11 @@ Como **dueño**, quiero crear una cita desde el panel para un cliente existente 
 - Busco al cliente por teléfono o por nombre, o escribo sus datos; el correo es opcional.
 - Elijo el servicio y una de **sus** horas libres. Se aplican las mismas reglas que en la página pública, salvo la anticipación mínima y máxima. No hay sobrecupo.
 - Si la hora se ocupó mientras tanto, veo "Esa hora ya no está disponible" y la lista se actualiza.
-- La cita lleva código de reserva. Si el cliente tiene correo, recibe la confirmación.
+- La cita lleva código de reserva. Si el cliente tiene correo, recibe la confirmación; si no, puedo enviarle la cita por WhatsApp desde el detalle (AGE-02).
+
+**AGE-08. Agendar la próxima cita del cliente** · MVP
+Como **dueño**, quiero agendar la siguiente cita de un cliente desde la que está terminando, para que salga con su próxima cita sin tener que buscarlo de nuevo.
+- El detalle de la cita trae "Agendar la próxima", que abre la cita manual (AGE-03) con el cliente y el servicio ya elegidos.
 
 #### AGE-E3. Cambios en las citas
 
@@ -416,7 +428,7 @@ Como **dueño**, quiero que, si no marco una cita, el sistema le aplique mi asis
 
 ### M7. Autogestión de la cita
 
-**Propósito:** que el cliente cancele o cambie su cita sin cuenta y sin llamar, desde el link que llega en sus correos.
+**Propósito:** que el cliente cancele, cambie o confirme su cita sin cuenta y sin llamar, desde el link que le llega por correo o por WhatsApp.
 
 #### AUT-E1. Gestionar mi cita por link
 
@@ -444,6 +456,12 @@ Como **cliente**, quiero un mensaje claro y los contactos del negocio cuando ya 
 - Con la cita pasada o cancelada: solo se muestra su estado.
 - Con el negocio suspendido: se muestran la cita y los contactos, sin acciones.
 
+**AUT-05. Confirmar que asistiré** · MVP
+Como **cliente**, quiero confirmar desde el recordatorio o desde el link que asistiré a mi cita, para que el negocio sepa que voy.
+- El recordatorio y el link de gestión traen el botón "Confirmo que asisto".
+- Al confirmar, la cita muestra "Asistencia confirmada" en la agenda y en el detalle del panel.
+- El dueño no recibe un correo por la confirmación: la ve en el panel.
+
 ---
 
 ### M8. Clientes y protección de datos
@@ -468,6 +486,7 @@ Como **dueño**, quiero una lista de mis clientes con búsqueda por nombre o tel
 **CLI-03. Ver la ficha de un cliente** · MVP
 Como **dueño**, quiero ver el contacto, el historial de citas y una nota interna de cada cliente, para atenderlo mejor.
 - La nota interna advierte que no es para información clínica.
+- Muestra cuántas veces faltó el cliente, por ejemplo "Faltó a 2 de 5 citas". Es solo informativo: no impide que reserve.
 
 #### CLI-E3. Derechos del titular
 
@@ -488,13 +507,24 @@ Como **dueño**, quiero partir de una plantilla de política de datos, editarla 
 - Cada publicación crea una versión nueva; las anteriores no cambian, porque cada cita guarda la versión que aceptó el cliente.
 - Puedo restaurar la plantilla del SaaS.
 
+#### CLI-E5. Traer y llevarse los datos
+
+Mientras estas historias no existan, el administrador ayuda a mano a quien lo necesite.
+
+**CLI-07. Importar mis clientes** · Posterior
+Como **dueño nuevo**, quiero cargar mis clientes desde un archivo de Excel o CSV, para no empezar con la lista vacía.
+- Los clientes importados siguen las reglas de identidad de CLI-01, sin crear duplicados.
+
+**CLI-08. Exportar mis clientes y mis citas** · Posterior
+Como **dueño**, quiero descargar mis clientes y mis citas en un archivo, para tener mi información fuera del sistema.
+
 ---
 
 ### M9. Notificaciones y calendarios
 
 **Propósito:** reducir las inasistencias con recordatorios y que cada quien tenga la cita en su propio calendario, sin conectar cuentas.
 
-El correo es el único canal del MVP. Los correos de citas salen a nombre del negocio, en su zona horaria, y las respuestas llegan a sus contactos.
+El correo es el único canal automático del MVP. Además, el dueño puede enviar una cita por WhatsApp desde su propio teléfono (AGE-02). Los correos de citas salen a nombre del negocio, en su zona horaria, y las respuestas llegan a sus contactos.
 
 #### NOT-E1. Correos al cliente
 
@@ -509,6 +539,7 @@ Como **dueño**, quiero que mis clientes reciban un recordatorio automático, pa
 - Sale entre 0 y 5 minutos después del momento configurado. Si la cita se cancela, no sale; si se reprograma, sale según la nueva hora.
 - Si la cita se crea cuando ya pasó el momento del recordatorio, no se envía.
 - El recordatorio no trae otra invitación, para no duplicar el evento.
+- El recordatorio trae el botón "Confirmo que asisto" (AUT-05).
 
 **NOT-03. Enterarme de los cambios en mi cita** · MVP
 Como **cliente**, quiero recibir un correo cuando mi cita se cancela o cambia de hora, haya sido yo o el negocio, para que mi calendario siempre esté al día.
@@ -520,13 +551,13 @@ Como **cliente**, quiero recibir un correo cuando mi cita se cancela o cambia de
 **NOT-04. Enterarme de lo que hacen mis clientes** · MVP
 Como **dueño**, quiero recibir un correo cada vez que un cliente reserva, cancela o reprograma, para estar al tanto sin abrir el panel.
 - La cita nueva y el cambio traen los datos y un enlace al panel.
-- No recibo correos por lo que yo mismo hago en el panel.
+- No recibo correos por lo que yo mismo hago en el panel, ni cuando un cliente confirma su asistencia (AUT-05).
 
 #### NOT-E3. Calendario del dueño
 
 **NOT-05. Ver mi agenda en mi calendario** · MVP
-Como **dueño**, quiero un enlace privado para suscribir mi calendario de Google u Outlook, para ver ahí todas mis citas sin hacer nada más.
-- El panel muestra el enlace con instrucciones para Google Calendar y Outlook.
+Como **dueño**, quiero un enlace privado para suscribir mi calendario de Google, Outlook o Apple, para ver ahí todas mis citas sin hacer nada más.
+- El panel muestra el enlace con instrucciones para Google Calendar, Outlook y el calendario de Apple (iPhone y Mac).
 - Incluye las citas que crean los clientes y las que creo yo, sin teléfonos ni correos. Las canceladas desaparecen en la siguiente actualización.
 - Puedo regenerar el enlace; el anterior deja de funcionar.
 - Cada calendario decide cada cuánto se actualiza (en Google pueden pasar horas), así que el panel sigue siendo la referencia del día.
@@ -545,6 +576,18 @@ Como **dueño**, quiero que cada correo salga una sola vez y que los fallos se r
 Como **empleado con correo**, quiero recibir mis citas con invitación de calendario y sus cambios, para tener mi agenda personal al día.
 - Si una cita pasa de Ana a Luis, el evento desaparece del calendario de Ana y aparece en el de Luis.
 
+#### NOT-E6. WhatsApp automático
+
+**NOT-08. Recibir el recordatorio por WhatsApp** · Posterior
+Como **cliente**, quiero recibir el recordatorio de mi cita por WhatsApp, porque es el canal que más reviso.
+- Antes de construirla hay que elegir el proveedor de la API de WhatsApp Business (STACK.md) y decidir si se cobra aparte o va incluida en el precio.
+
+#### NOT-E7. Invitar a volver
+
+**NOT-09. Invitar al cliente a volver** · Posterior
+Como **dueño**, quiero que el cliente reciba un aviso cuando le toca volver y aún no ha reservado, para no perderlo.
+- Requiere definir cada cuánto vuelve el cliente de cada servicio.
+
 ---
 
 ### M10. Suscripción y planes
@@ -558,7 +601,7 @@ En el MVP existe un solo plan interno, `ilimitado`, con todo habilitado. La dife
 **SUS-01. Ver el estado de mi suscripción** · MVP
 Como **dueño**, quiero ver si mi suscripción está al día, en gracia o suspendida, para pagar a tiempo y no perder el servicio.
 - En gracia, el panel muestra "Tu suscripción venció. Renueva antes del {fecha} para no perder el servicio".
-- Suspendida, muestra "Tu suscripción está suspendida." con instrucciones para renovar.
+- Suspendida, muestra "Tu suscripción está suspendida." con instrucciones para renovar y el contacto de soporte (OPE-07).
 
 **SUS-02. Aplicar la gracia y la suspensión automáticamente** · MVP · *Sistema*
 Como **administrador**, quiero que un negocio que no paga pase solo por 3 días de gracia y luego se suspenda, para no tener que vigilar cada vencimiento a mano.
@@ -625,6 +668,13 @@ Como **administrador**, quiero cambiar el plan o las excepciones de un negocio, 
 Como **administrador**, quiero ver los correos fallidos y los que llevan más de 15 minutos de atraso, y reintentar los fallidos, para detectar a tiempo si el envío o la tarea programada se detuvieron.
 - La lista no muestra los destinatarios.
 
+#### OPE-E4. Soporte
+
+**OPE-07. Pedir ayuda desde el panel** · MVP
+Como **dueño**, quiero ver siempre a quién pedir ayuda, para resolver mis dudas sin buscar el contacto por fuera.
+- El menú del panel muestra "Ayuda", con el WhatsApp y el correo del operador del SaaS.
+- Esos datos se configuran en el servidor, no en el código.
+
 ---
 
 ## 4. Requisitos transversales
@@ -635,7 +685,7 @@ No pertenecen a un módulo: cada historia de este documento los cumple.
 |---|---|
 | **Multi-negocio** | Toda la información pertenece a un negocio y ninguna consulta cruza negocios. |
 | **Hora local** | Las fechas se guardan en UTC y se muestran siempre en `America/Bogota`, en español y con formato de 12 horas. |
-| **Móvil primero** | La página pública funciona desde 360 px y carga en menos de 2,5 s en 4G. |
+| **Móvil primero** | La página pública funciona desde 360 px y carga en menos de 2,5 s en 4G. En el panel, la operación diaria también funciona desde 360 px: ver la agenda, ver el detalle de una cita, crear, mover o cancelar una cita, marcar la asistencia y buscar un cliente. Las pantallas de configuración solo deben poder usarse en el celular. No hay app nativa ni PWA. |
 | **Accesibilidad** | WCAG 2.1 AA en la página pública: etiquetas visibles, uso con teclado, contraste y foco visible. Ningún estado se distingue solo por el color. |
 | **Seguridad** | HTTPS, sesión obligatoria en el panel, links impredecibles, límite de frecuencia y secretos fuera del código. |
 | **Privacidad** | Datos mínimos, sin historia clínica, consentimiento con versión y fecha, y registros técnicos sin datos personales. |
@@ -649,7 +699,8 @@ No pertenecen a un módulo: cada historia de este documento los cumple.
 
 | Tema | Historias | Estado |
 |---|---|---|
-| Diferenciación comercial de los planes | SUS-04, SUS-05 | Pendiente hasta el 2.º o 3.er cliente. |
+| Diferenciación comercial de los planes. Se decide junto con: qué ve el cliente y qué aviso recibe el dueño antes y al llegar a un límite del plan, y qué se promete sobre el precio (por ejemplo, sin comisiones, sin cobrar el canal de aviso y con aviso antes de subirlo). | SUS-04, SUS-05, RES-09 | Pendiente hasta el 2.º o 3.er cliente. |
 | Plazo de conservación de citas y clientes inactivos | CLI-05 | Por definir con el negocio. |
 | Preguntas abiertas sobre clientes | CLI-02 a CLI-05 | Se resuelven al refinar cada historia. |
 | Redacción definitiva y revisión legal de la política | CLI-06 | Pendiente. |
+| Hasta cuándo se puede confirmar la asistencia, y qué pasa con la confirmación si la cita se reprograma o el negocio está suspendido | AUT-05 | Se resuelve al refinar la historia. |
