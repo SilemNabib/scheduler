@@ -6,35 +6,36 @@ import path from "node:path";
 const dbPackage = path.resolve(import.meta.dirname, "../../../packages/db");
 
 /**
- * Removes the businesses the tests create (slug "t-…"/"test-…" or an
- * @example.com owner), so they do not pile up in the local database.
- * Only ever touches a local database.
+ * Creates the test database if needed. It must be named *_test, so the setup
+ * can never empty another database by mistake.
  */
-const REMOVE_TEST_BUSINESSES = `
+const CREATE_TEST_DATABASE = `
   import postgres from "postgres";
-  const url = process.env.DATABASE_URL ?? "postgres://postgres:postgres@localhost:54329/agenda";
-  const { hostname } = new URL(url);
-  if (hostname === "localhost" || hostname === "127.0.0.1") {
-    const sql = postgres(url, { max: 1, onnotice: () => {} });
-    await sql\`delete from businesses where slug ~ '^(t-|test-)' or owner_email like '%@example.com'\`;
-    await sql.end();
-  }
+  const url = new URL(process.env.TEST_DATABASE_URL);
+  const name = decodeURIComponent(url.pathname.slice(1));
+  if (!/^[a-z0-9_]+_test$/.test(name)) throw new Error("The test database must be named *_test, got " + name);
+  url.pathname = "/postgres";
+  const sql = postgres(url.toString(), { max: 1, onnotice: () => {} });
+  const [exists] = await sql\`select 1 from pg_database where datname = \${name}\`;
+  if (!exists) await sql.unsafe(\`create database "\${name}"\`);
+  await sql.end();
 `;
 
-function removeTestBusinesses() {
-  execFileSync(process.execPath, ["--input-type=module", "-e", REMOVE_TEST_BUSINESSES], {
-    cwd: dbPackage,
-    stdio: "inherit",
-  });
+/** Every run starts from an empty test database. */
+const EMPTY_TEST_DATABASE = `
+  import postgres from "postgres";
+  const sql = postgres(process.env.TEST_DATABASE_URL, { max: 1, onnotice: () => {} });
+  await sql\`truncate businesses, business_users\`;
+  await sql.end();
+`;
+
+function node(args: string[], env: Record<string, string> = {}) {
+  execFileSync(process.execPath, args, { cwd: dbPackage, stdio: "inherit", env: { ...process.env, ...env } });
 }
 
 export default function setup() {
-  // Applies the migrations before the tests.
-  execFileSync(process.execPath, ["--experimental-strip-types", "src/migrate.ts"], {
-    cwd: dbPackage,
-    stdio: "inherit",
-  });
-  removeTestBusinesses();
-  // Returned function = teardown, after all tests.
-  return removeTestBusinesses;
+  const testDatabaseUrl = process.env.TEST_DATABASE_URL!;
+  node(["--input-type=module", "-e", CREATE_TEST_DATABASE]);
+  node(["--experimental-strip-types", "src/migrate.ts"], { DATABASE_URL: testDatabaseUrl });
+  node(["--input-type=module", "-e", EMPTY_TEST_DATABASE]);
 }

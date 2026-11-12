@@ -9,6 +9,7 @@ import { clerkAuth } from "../src/middleware/clerk-auth.ts";
 const app = createApp({
   auth: clerkAuth,
   inviteOwner: () => Promise.reject(new Error("No invitations in these tests")),
+  getPrimaryEmail: () => Promise.resolve(null),
 });
 const vars = {
   CLERK_SECRET_KEY: "sk_test_not_a_real_key",

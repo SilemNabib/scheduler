@@ -28,14 +28,14 @@ pnpm dev
 
 `pnpm dev` levanta la web en http://localhost:5173 y la API en http://localhost:8787. Vite reenvía `/api` a la API. El Postgres de Docker escucha en el puerto **54329** para no chocar con uno instalado en el equipo.
 
-`pnpm test` corre las pruebas del Worker contra ese mismo Postgres.
+`pnpm test` corre las pruebas del Worker contra ese mismo Postgres, pero en su propia base, `agenda_test`: se crea sola, recibe las migraciones y se vacía al empezar cada ejecución. La base de desarrollo (`agenda`) no se toca.
 
 ### Clerk (instancia de desarrollo)
 
 En el dashboard de Clerk:
 
 - **User & authentication → Email, phone, username:** solo correo electrónico, con contraseña.
-- **Restrictions → Sign-up mode:** *Restricted* (nadie se registra sin invitación).
+- **Restrictions → Sign-up mode:** *Restricted* (nadie se registra sin invitación). **Es la única barrera real** de ACC-01: `/registro` solo oculta el formulario sin invitación, pero con el modo *Public* cualquiera podría crear una cuenta por la API de Clerk (quedaría en "Sin acceso", sin datos). Revísalo en cada instancia nueva de Clerk, incluida la de producción cuando haya dominio.
 - Para probar `/login` sin ACC-01, crea el usuario a mano en **Users → Create user**. Para darle un negocio:
 
 ```sql

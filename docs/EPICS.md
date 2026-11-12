@@ -110,11 +110,11 @@ En palabras: el dueño **configura** su negocio (M2 a M4); con eso, el motor de 
 
 #### ACC-E1. Ingreso del dueño
 
-**ACC-01. Activar mi cuenta desde la invitación** · MVP
+**✅ ACC-01. Activar mi cuenta desde la invitación** · MVP
 Como **dueño invitado**, quiero definir mi contraseña desde el correo de invitación, para entrar a mi panel sin tener que registrarme por mi cuenta.
 - La invitación lleva a `/registro`, donde el dueño define su contraseña. Su correo queda confirmado.
-- En el primer ingreso, la cuenta se vincula al negocio por el correo principal verificado.
-- Nadie puede registrarse sin invitación.
+- En el primer ingreso, la cuenta se vincula al negocio por el correo principal verificado (sin importar mayúsculas), solo si ese negocio aún no tiene un dueño vinculado. Con un correo sin verificar o que no es dueño de ningún negocio, se ve "Sin acceso".
+- Nadie puede registrarse sin invitación: `/registro` sin invitación avisa que el registro es solo por invitación y enlaza a "Iniciar sesión".
 
 **✅ ACC-02. Iniciar y cerrar sesión** · MVP
 Como **dueño**, quiero entrar con mi correo y contraseña y cerrar sesión cuando termine, para proteger la información de mi negocio.

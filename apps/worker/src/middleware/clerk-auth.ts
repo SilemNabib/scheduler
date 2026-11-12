@@ -1,6 +1,6 @@
-import { createClerkClient } from "@clerk/backend";
 import type { Context } from "hono";
 import { createMiddleware } from "hono/factory";
+import { clerkClient } from "../clerk.ts";
 import type { AppEnv } from "../types.ts";
 
 /**
@@ -25,11 +25,7 @@ async function sessionUserId(c: Context<AppEnv>): Promise<string | null> {
   if (authorizedParties.length === 0) throw new Error("Missing APP_ORIGINS");
 
   try {
-    const clerk = createClerkClient({
-      secretKey: c.env.CLERK_SECRET_KEY,
-      publishableKey: c.env.CLERK_PUBLISHABLE_KEY,
-    });
-    const state = await clerk.authenticateRequest(c.req.raw, {
+    const state = await clerkClient(c.env).authenticateRequest(c.req.raw, {
       authorizedParties,
       acceptsToken: "session_token",
     });

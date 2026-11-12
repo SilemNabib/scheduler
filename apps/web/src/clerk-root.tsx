@@ -16,6 +16,7 @@ export function ClerkRoot() {
       publishableKey={publishableKey}
       localization={esES}
       signInUrl="/login"
+      signUpUrl="/registro"
       afterSignOutUrl="/login"
       routerPush={(to) => navigate(to)}
       routerReplace={(to) => navigate(to, { replace: true })}

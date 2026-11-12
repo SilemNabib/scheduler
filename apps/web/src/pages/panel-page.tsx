@@ -44,7 +44,11 @@ function SignedInPanel() {
     let active = true;
     setState({ status: "loading" });
     api<{ business: Business | null }>("/me")
-      .then(({ business }) => {
+      // No business yet: maybe the first sign-in of an invited owner (ACC-01).
+      .then(async ({ business }) =>
+        business ? business : (await api<{ business: Business | null }>("/me/claim", { method: "POST" })).business,
+      )
+      .then((business) => {
         if (active) setState({ status: "ready", business });
       })
       .catch((error: unknown) => {

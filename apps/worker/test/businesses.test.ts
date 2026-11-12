@@ -8,6 +8,7 @@ import {
   postJson,
   request,
   withDb,
+  resetFakes,
 } from "./helpers.ts";
 
 const ADMIN = "user_test_admin";
@@ -27,9 +28,7 @@ async function snapshot(res: Response) {
   return { status: res.status, type: res.headers.get("content-type"), body: await res.text() };
 }
 
-beforeEach(() => {
-  invitations.length = 0;
-});
+beforeEach(resetFakes);
 
 describe("POST /api/admin/businesses", () => {
   it("answers like an unknown route to anyone who is not an admin", async () => {

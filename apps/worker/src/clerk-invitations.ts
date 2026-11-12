@@ -1,4 +1,4 @@
-import { createClerkClient } from "@clerk/backend";
+import { clerkClient } from "./clerk.ts";
 import { InvitationError, type InvitationErrorCode, type InviteOwner } from "./invitations.ts";
 
 /** Clerk error codes we can explain to the admin; anything else is a generic failure. */
@@ -9,10 +9,7 @@ const KNOWN_ERRORS: Record<string, InvitationErrorCode> = {
 
 /** Sends the invitation email through Clerk (its template, localized in the Clerk dashboard). */
 export const clerkInviteOwner: InviteOwner = async ({ email, redirectUrl }, env) => {
-  const clerk = createClerkClient({
-    secretKey: env.CLERK_SECRET_KEY,
-    publishableKey: env.CLERK_PUBLISHABLE_KEY,
-  });
+  const clerk = clerkClient(env);
   let accounts: number;
   try {
     // Clerk sends invitations even to emails that already have an account, so check first.
