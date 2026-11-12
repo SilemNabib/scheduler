@@ -5,6 +5,7 @@
 interface AppSecrets {
   CLERK_SECRET_KEY: string;
   CLERK_PUBLISHABLE_KEY: string;
+  ADMIN_USER_IDS: string;
 }
 
 interface Env extends AppSecrets {}

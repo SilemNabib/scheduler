@@ -1,6 +1,7 @@
 import { businesses, businessUsers } from "@agenda/db";
 import { asc, eq } from "drizzle-orm";
 import { Hono } from "hono";
+import { isAdmin } from "../middleware/require-admin.ts";
 import type { AppEnv } from "../types.ts";
 
 // Mounted behind `auth` and `requireUser` (app.ts), so `userId` is always set.
@@ -17,5 +18,6 @@ export const me = new Hono<AppEnv>().get("/", async (c) => {
     .limit(1);
 
   // A valid session without a business is not an error: the panel shows "sin acceso".
-  return c.json({ business: business ?? null });
+  // `admin` is only present for admins, so other users get no hint that admins exist.
+  return c.json({ business: business ?? null, ...(isAdmin(c.env, userId) && { admin: true }) });
 });

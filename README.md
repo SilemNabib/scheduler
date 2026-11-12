@@ -67,6 +67,7 @@ En Cloudflare (desde `apps/worker`):
 
 - `pnpm exec wrangler hyperdrive create agenda-citas --connection-string="<Neon>"`, con el connection string **directo** de Neon (sin `-pooler`: Hyperdrive ya hace el pooling), y poner el id en `apps/worker/wrangler.jsonc`.
 - `pnpm exec wrangler secret put CLERK_SECRET_KEY` y `pnpm exec wrangler secret put CLERK_PUBLISHABLE_KEY`.
+- `pnpm exec wrangler secret put ADMIN_USER_IDS`: los IDs de usuario de Clerk (`user_…`) que pueden entrar a `/admin`, separados por coma. Sin la variable, nadie es administrador. En local va en `.dev.vars`, y Wrangler solo lo lee al arrancar.
 - `APP_ORIGINS` en `apps/worker/wrangler.jsonc` (`vars`): los orígenes cuyos tokens de Clerk acepta la API, separados por coma. Hoy es `https://agenda-citas.silemnabib.workers.dev`; al cambiar de dominio hay que actualizarlo, o nadie podrá entrar. En local, `.dev.vars` lo reemplaza por los orígenes de Vite y `wrangler dev`.
 
 **Clerk mientras no haya dominio propio:** una instancia de producción de Clerk exige un dominio propio y no funciona en `*.workers.dev`. Hasta tenerlo, el despliegue usa las llaves de la instancia de **desarrollo** (`pk_test_…`, `sk_test_…`). Al tener dominio se crea la instancia de producción y se cambian las tres llaves.

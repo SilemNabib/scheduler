@@ -49,7 +49,7 @@ flowchart LR
 | **UI** | shadcn/ui + Tailwind CSS v4, con variables CSS para la marca de cada negocio | Marca propia por negocio (NEG-01) y una base accesible para WCAG 2.1 AA. | **Definido** |
 | **Datos del servidor** | TanStack Query | Caché, carga, errores y reintentos en el panel y en la reserva. | Propuesto |
 | **Formularios** | React Hook Form + Zod, con los mismos esquemas que el backend | Validación tipada y errores junto a cada campo (RES-05). | Propuesto |
-| **Autenticación** | Clerk: `@hono/clerk-auth` en la API, SDK de React en el panel, localización `esES`. Registro solo por invitación. | Identidad del dueño y del administrador (M1). La pertenencia al negocio vive en la base, no en Clerk. | **Definido** |
+| **Autenticación** | Clerk: `@clerk/backend` en la API (un middleware propio que solo lee el usuario: sin encabezados ni redirecciones de Clerk), SDK de React en el panel, localización `esES`. Registro solo por invitación. | Identidad del dueño y del administrador (M1). La pertenencia al negocio vive en la base, no en Clerk. Se descartó `@hono/clerk-auth` (deprecado): sus encabezados y errores delataban `/api/admin` (ACC-05). | **Definido** |
 | **Base de datos** | Neon Postgres, conectado por Hyperdrive | El motor necesita transacciones interactivas, `SELECT … FOR UPDATE`, `SKIP LOCKED` y triggers de auditoría (DIS-06, NOT-06, SUS-04). Driver: `postgres` (postgres.js) con `prepare: false`. | **Definido** |
 | **ORM y migraciones** | Drizzle + Drizzle Kit, con migraciones SQL versionadas en el repo | API cercana a SQL y tipos sacados del esquema. Viven en `packages/db`. | **Definido** |
 | **Correo** | Resend + React Email, con bandeja de salida en Postgres | Un envío por correo, con reintentos (NOT-06). | **Definido** (Resend) |

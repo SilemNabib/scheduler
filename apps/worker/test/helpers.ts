@@ -15,10 +15,11 @@ const fakeAuth = createMiddleware<AppEnv>(async (c, next) => {
 
 const app = createApp({ auth: fakeAuth });
 
-export async function request(path: string, userId?: string) {
+/** Calls the API as `userId` (no session without it). `vars` overrides environment values. */
+export async function request(path: string, userId?: string, vars: Partial<Env> = {}) {
   const headers = userId ? { [TEST_USER_HEADER]: userId } : undefined;
   const ctx = createExecutionContext();
-  const res = await app.request(path, { headers }, env, ctx);
+  const res = await app.request(path, { headers }, { ...env, ...vars }, ctx);
   await waitOnExecutionContext(ctx);
   return res;
 }

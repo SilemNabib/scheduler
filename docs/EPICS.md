@@ -133,12 +133,13 @@ Como **dueño**, quiero que el panel me muestre únicamente la información de m
 - El negocio sale de la sesión, nunca de un parámetro que envíe el navegador.
 - Si se manipulan identificadores para llegar a citas, clientes o servicios de otro negocio, la respuesta es "no encontrado" y no se ve ni se cambia nada.
 
-#### ACC-E2. Acceso del administrador
+#### ✅ ACC-E2. Acceso del administrador
 
-**ACC-05. Entrar al panel interno** · MVP
+**✅ ACC-05. Entrar al panel interno** · MVP
 Como **administrador**, quiero un panel `/admin` al que solo yo pueda entrar, para operar el SaaS sin exponerlo.
 - Solo entran los usuarios autorizados en la configuración del servidor.
-- Cualquier otro usuario, con sesión o sin ella, recibe una página "no encontrado": no se revela que `/admin` existe.
+- Al entrar por `/login`, el administrador llega directo a `/admin`; cualquier otro usuario llega a `/panel`.
+- Cualquier otro usuario, con sesión o sin ella, recibe una página "no encontrado": no se revela que `/admin` existe. Esto vale para la página y para la API.
 
 #### ACC-E3. Equipo del negocio
 

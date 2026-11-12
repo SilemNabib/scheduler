@@ -1,5 +1,6 @@
 import { createBrowserRouter } from "react-router";
 import { ClerkRoot } from "./clerk-root";
+import { AdminPage } from "./pages/admin-page";
 import { ChangePasswordPage } from "./pages/change-password-page";
 import { HomePage } from "./pages/home-page";
 import { LoginPage } from "./pages/login-page";
@@ -15,6 +16,7 @@ export const router = createBrowserRouter([
       { path: "/login/*", element: <LoginPage /> },
       { path: "/panel", element: <PanelPage /> },
       { path: "/panel/contrasena", element: <ChangePasswordPage /> },
+      { path: "/admin", element: <AdminPage /> },
       { path: "*", element: <NotFoundPage /> },
     ],
   },
