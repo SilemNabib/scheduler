@@ -3,6 +3,7 @@ import { createExecutionContext, waitOnExecutionContext } from "cloudflare:test"
 import { env } from "cloudflare:workers";
 import { createMiddleware } from "hono/factory";
 import { createApp } from "../src/app.ts";
+import { InvitationError, type InvitationErrorCode, type InviteOwner } from "../src/invitations.ts";
 import type { AppEnv } from "../src/types.ts";
 
 /** Test header that stands in for a valid Clerk session. */
@@ -13,15 +14,43 @@ const fakeAuth = createMiddleware<AppEnv>(async (c, next) => {
   await next();
 });
 
-const app = createApp({ auth: fakeAuth });
+/** Invitations the app asked to send, in order. Tests clear it. */
+export const invitations: { email: string; redirectUrl: string }[] = [];
+let nextInvitationError: InvitationErrorCode | null = null;
+
+/** Makes the next invitation fail with `code`. */
+export function failNextInvitation(code: InvitationErrorCode) {
+  nextInvitationError = code;
+}
+
+const fakeInvite: InviteOwner = async (params) => {
+  if (nextInvitationError) {
+    const code = nextInvitationError;
+    nextInvitationError = null;
+    throw new InvitationError(code);
+  }
+  invitations.push(params);
+};
+
+const app = createApp({ auth: fakeAuth, inviteOwner: fakeInvite });
 
 /** Calls the API as `userId` (no session without it). `vars` overrides environment values. */
-export async function request(path: string, userId?: string, vars: Partial<Env> = {}) {
-  const headers = userId ? { [TEST_USER_HEADER]: userId } : undefined;
+export async function request(path: string, userId?: string, vars: Partial<Env> = {}, init: RequestInit = {}) {
+  const headers = new Headers(init.headers);
+  if (userId) headers.set(TEST_USER_HEADER, userId);
   const ctx = createExecutionContext();
-  const res = await app.request(path, { headers }, { ...env, ...vars }, ctx);
+  const res = await app.request(path, { ...init, headers }, { ...env, ...vars }, ctx);
   await waitOnExecutionContext(ctx);
   return res;
+}
+
+/** POSTs `body` as JSON. */
+export function postJson(path: string, body: unknown, userId?: string, vars: Partial<Env> = {}) {
+  return request(path, userId, vars, {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify(body),
+  });
 }
 
 export async function withDb<T>(fn: (db: ReturnType<typeof createDb>) => Promise<T>) {

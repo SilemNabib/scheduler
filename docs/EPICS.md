@@ -159,7 +159,7 @@ Como **dueño**, quiero invitar a otras personas de mi equipo con un rol, para r
 
 **NEG-01. Configurar la marca de mi negocio** · MVP
 Como **dueño**, quiero definir el nombre, el rubro, el eslogan, la frase del banner, la descripción y los colores de mi negocio, para que la página de reservas se vea como mía.
-- El nombre es obligatorio; los demás textos son opcionales y tienen un largo máximo.
+- El nombre es obligatorio, de hasta 80 caracteres; los demás textos son opcionales y tienen un largo máximo.
 - Los colores se eligen en formato `#rrggbb`. Si el color no da contraste suficiente, los textos usan un color alternativo legible.
 
 **NEG-02. Subir el logo** · MVP
@@ -645,10 +645,14 @@ El panel `/admin` es interno y no tiene diseño visual. El cobro de la suscripci
 **OPE-01. Ver todos los negocios** · MVP
 Como **administrador**, quiero ver la lista de negocios con su slug, plan, estado, vencimiento y si están en gracia, para saber a quién cobrar.
 
-**OPE-02. Dar de alta un negocio** · MVP
-Como **administrador**, quiero crear un negocio con su slug, nombre, plan, estado, vencimiento y correo del dueño, para que el dueño reciba su invitación y empiece a configurarlo.
-- El slug es único, de 3 a 40 caracteres (`a-z`, `0-9` y guiones) y no puede ser una palabra reservada (`admin`, `panel`, `login`…).
-- El alta crea el negocio con los valores por defecto, la "Sede principal" con su consultorio, la política de datos v1 y al dueño pendiente, y envía la invitación.
+**✅ OPE-02. Dar de alta un negocio** · MVP
+Como **administrador**, quiero crear un negocio con su slug, nombre y correo del dueño, para que el dueño reciba su invitación y empiece a configurarlo.
+- El slug es único, de 3 a 40 caracteres (`a-z`, `0-9` y guiones) y no puede ser una palabra reservada: `admin`, `panel`, `login`, `registro`, `api`, `assets`, `ayuda`, `soporte`, `contacto`, `www`, `app`, `precios`, `terminos`, `privacidad`. Cuando la app tenga una ruta nueva en la raíz, se agrega a la lista.
+- El nombre es obligatorio, de hasta 80 caracteres, y el correo del dueño debe ser válido. Cada error aparece junto a su campo y no se crea nada.
+- Un correo puede ser dueño de un solo negocio (sin importar mayúsculas): se guarda en minúsculas, porque ACC-01 vincula al dueño por ese correo.
+- El alta guarda el negocio con el correo del dueño pendiente y le envía una invitación (por ahora, el correo de Clerk) con un enlace a `/registro`.
+- Si la invitación no se puede enviar (el correo ya tiene una cuenta, ya tiene una invitación pendiente o falla el envío), se muestra el motivo y el negocio no se crea.
+- Quedan para otras historias: el plan, el estado y el vencimiento (OPE-04, OPE-05 y SUS); los valores por defecto, la "Sede principal" con su consultorio y la política de datos v1 (NEG-05, SER-04 y CLI-06), que se crean al dar de alta cuando esas historias existan.
 
 **OPE-03. Reenviar la invitación al dueño** · MVP
 Como **administrador**, quiero reenviar la invitación a un dueño que no la usó, para que no se quede sin acceso.

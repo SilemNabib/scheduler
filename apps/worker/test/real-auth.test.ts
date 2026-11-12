@@ -6,7 +6,10 @@ import { clerkAuth } from "../src/middleware/clerk-auth.ts";
 
 // The real Clerk middleware, with made-up keys: malformed tokens are rejected
 // without any network call, which is all these tests need.
-const app = createApp({ auth: clerkAuth });
+const app = createApp({
+  auth: clerkAuth,
+  inviteOwner: () => Promise.reject(new Error("No invitations in these tests")),
+});
 const vars = {
   CLERK_SECRET_KEY: "sk_test_not_a_real_key",
   CLERK_PUBLISHABLE_KEY: `pk_test_${btoa("example.clerk.accounts.dev$")}`,
@@ -14,9 +17,9 @@ const vars = {
   ADMIN_USER_IDS: "user_test_admin",
 };
 
-async function snapshot(path: string, headers: Record<string, string>) {
+async function snapshot(path: string, headers: Record<string, string>, init: RequestInit = {}) {
   const ctx = createExecutionContext();
-  const res = await app.request(path, { headers }, { ...env, ...vars }, ctx);
+  const res = await app.request(path, { ...init, headers }, { ...env, ...vars }, ctx);
   await waitOnExecutionContext(ctx);
   return {
     status: res.status,
@@ -36,7 +39,10 @@ const requests: [string, Record<string, string>][] = [
 
 describe("/api/admin with the real Clerk middleware", () => {
   it.each(requests)("answers exactly like an unknown route %s", async (_, headers) => {
-    expect(await snapshot("/api/admin", headers)).toEqual(await snapshot("/api/no-such-route", headers));
+    // A real admin request: creating a business.
+    const create = (path: string) =>
+      snapshot(path, { ...headers, "content-type": "application/json" }, { method: "POST", body: "{}" });
+    expect(await create("/api/admin/businesses")).toEqual(await create("/api/no-such-route"));
   });
 });
 

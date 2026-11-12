@@ -1,15 +1,26 @@
-import { index, pgTable, primaryKey, text, timestamp, uuid } from "drizzle-orm/pg-core";
+import { index, pgTable, primaryKey, text, timestamp, uniqueIndex, uuid } from "drizzle-orm/pg-core";
 
 /**
  * A business (tenant). Only the columns the current stories need; plan, status
- * and subscription dates come with the operation stories (OPE-*).
+ * and subscription dates come with the subscription stories (SUS-*).
  */
-export const businesses = pgTable("businesses", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  slug: text("slug").notNull().unique(),
-  name: text("name").notNull(),
-  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
-});
+export const businesses = pgTable(
+  "businesses",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    slug: text("slug").notNull().unique(),
+    name: text("name").notNull(),
+    /**
+     * Email the owner was invited with (OPE-02), in lowercase. The owner's
+     * account is linked to the business by this email on first sign-in
+     * (ACC-01), so an email belongs to at most one business. Null for
+     * businesses created before invitations existed.
+     */
+    ownerEmail: text("owner_email"),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [uniqueIndex("businesses_owner_email_unique").on(t.ownerEmail)],
+);
 
 /**
  * Who can enter a business's panel. Membership lives in the database, not in

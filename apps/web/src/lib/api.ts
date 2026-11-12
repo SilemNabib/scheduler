@@ -5,6 +5,8 @@ export class ApiError extends Error {
   constructor(
     readonly status: number,
     readonly code: string,
+    /** Per-field error codes of a VALIDATION error, e.g. `{ slug: "SLUG_TAKEN" }`. */
+    readonly fields: Record<string, string> = {},
   ) {
     super(code);
   }
@@ -22,8 +24,11 @@ export function useApi() {
 
       const res = await fetch(`/api${path}`, { ...init, headers });
       if (!res.ok) {
-        const body = (await res.json().catch(() => null)) as { error?: string } | null;
-        throw new ApiError(res.status, body?.error ?? "UNKNOWN");
+        const body = (await res.json().catch(() => null)) as {
+          error?: string;
+          fields?: Record<string, string>;
+        } | null;
+        throw new ApiError(res.status, body?.error ?? "UNKNOWN", body?.fields);
       }
       return (await res.json()) as T;
     },

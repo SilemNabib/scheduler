@@ -15,6 +15,20 @@
       "when": 1794503877084,
       "tag": "0001_drop_business_users_role",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1794514080192,
+      "tag": "0002_add_business_owner_email",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1794515924908,
+      "tag": "0003_unique_business_owner_email",
+      "breakpoints": true
     }
   ]
 }

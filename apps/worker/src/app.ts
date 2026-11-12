@@ -1,16 +1,20 @@
 import { Hono, type MiddlewareHandler } from "hono";
+import type { InviteOwner } from "./invitations.ts";
 import { database } from "./middleware/database.ts";
 import { requireAdmin } from "./middleware/require-admin.ts";
 import { requireUser } from "./middleware/require-user.ts";
+import { adminRoutes } from "./routes/admin.ts";
 import { me } from "./routes/me.ts";
 import type { AppEnv } from "./types.ts";
 
 type Deps = {
   /** Sets `userId`. Clerk in production; the tests inject a fake one. */
   auth: MiddlewareHandler<AppEnv>;
+  /** Sends owner invitations. Clerk in production; the tests inject a fake one. */
+  inviteOwner: InviteOwner;
 };
 
-export function createApp({ auth }: Deps) {
+export function createApp({ auth, inviteOwner }: Deps) {
   const app = new Hono<AppEnv>().basePath("/api");
 
   // Every request, unknown routes included, goes through the same session
@@ -24,8 +28,8 @@ export function createApp({ auth }: Deps) {
   app.route("/me", me);
 
   // Only admins: for anyone else these routes answer like routes that do not exist.
-  app.use("/admin/*", requireAdmin);
-  app.get("/admin", (c) => c.json({ ok: true }));
+  app.use("/admin/*", requireAdmin, database);
+  app.route("/admin", adminRoutes(inviteOwner));
 
   app.notFound((c) => c.json({ error: "NOT_FOUND" }, 404));
 

@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX "businesses_owner_email_unique" ON "businesses" USING btree ("owner_email");
