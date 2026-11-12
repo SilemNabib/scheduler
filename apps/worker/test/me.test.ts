@@ -51,4 +51,17 @@ describe("GET /api/me", () => {
     const res = await request("/api/me", newUserId());
     expect(await res.json()).toEqual({ business: null });
   });
+
+  // ACC-04: the business comes from the session, never from what the browser sends.
+  it("ignores a business id or slug sent by the browser", async () => {
+    const userId = newUserId();
+    const own = await createBusiness(userId);
+    const other = await createBusiness(newUserId());
+
+    const query = `businessId=${other.id}&slug=${other.slug}`;
+    const res = await request(`/api/me?${query}`, userId, {}, {
+      headers: { "x-business-id": other.id },
+    });
+    expect(await res.json()).toEqual({ business: own });
+  });
 });

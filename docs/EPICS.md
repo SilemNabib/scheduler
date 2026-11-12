@@ -108,7 +108,7 @@ En palabras: el dueño **configura** su negocio (M2 a M4); con eso, el motor de 
 
 **Fuera del MVP:** varios usuarios por negocio y permisos (`multi_user`).
 
-#### ACC-E1. Ingreso del dueño
+#### ✅ ACC-E1. Ingreso del dueño
 
 **✅ ACC-01. Activar mi cuenta desde la invitación** · MVP
 Como **dueño invitado**, quiero definir mi contraseña desde el correo de invitación, para entrar a mi panel sin tener que registrarme por mi cuenta.
@@ -128,10 +128,11 @@ Como **dueño**, quiero cambiar mi contraseña y recuperarla si la olvido, para 
 - Cambiar: en el panel, con la contraseña actual y la nueva (dos veces). Si sale bien, vuelvo al panel con el aviso "Contraseña actualizada." y mis demás sesiones se cierran.
 - Si la contraseña actual es incorrecta, la nueva no cumple las reglas o no coincide con la confirmación, el error aparece junto al campo y la contraseña no cambia.
 
-**ACC-04. Ver solo los datos de mi negocio** · MVP
+**✅ ACC-04. Ver solo los datos de mi negocio** · MVP
 Como **dueño**, quiero que el panel me muestre únicamente la información de mi negocio, para que mis datos y los de mis clientes no se mezclen con los de otros.
 - El negocio sale de la sesión, nunca de un parámetro que envíe el navegador.
 - Si se manipulan identificadores para llegar a citas, clientes o servicios de otro negocio, la respuesta es "no encontrado" y no se ve ni se cambia nada.
+- *Cómo se cumple:* es una regla transversal ("Multi-negocio", sección 4). Hoy el panel obtiene su negocio solo de la sesión, con prueba. Cada historia que agregue datos de un negocio (servicios, citas, clientes…) incluye en su lista de pruebas el caso "id de otro negocio → no encontrado" (CLAUDE.md, paso 5).
 
 #### ✅ ACC-E2. Acceso del administrador
 
@@ -691,7 +692,7 @@ No pertenecen a un módulo: cada historia de este documento los cumple.
 
 | Requisito | Qué exige |
 |---|---|
-| **Multi-negocio** | Toda la información pertenece a un negocio y ninguna consulta cruza negocios. |
+| **Multi-negocio** | Toda la información pertenece a un negocio y ninguna consulta cruza negocios. El negocio sale de la sesión, y cada ruta con un id responde "no encontrado" si es de otro negocio (ACC-04). |
 | **Hora local** | Las fechas se guardan en UTC y se muestran siempre en `America/Bogota`, en español y con formato de 12 horas. |
 | **Móvil primero** | La página pública funciona desde 360 px y carga en menos de 2,5 s en 4G. En el panel, la operación diaria también funciona desde 360 px: ver la agenda, ver el detalle de una cita, crear, mover o cancelar una cita, marcar la asistencia y buscar un cliente. Las pantallas de configuración solo deben poder usarse en el celular. No hay app nativa ni PWA. |
 | **Accesibilidad** | WCAG 2.1 AA en la página pública: etiquetas visibles, uso con teclado, contraste y foco visible. Ningún estado se distingue solo por el color. |

@@ -27,6 +27,7 @@ El usuario entrega las historias de usuario **una a una** (por ejemplo, `RES-03`
 
    No se escribe código hasta que el usuario apruebe la ficha.
 5. **Aprobar la lista de pruebas.** A partir de los criterios, proponer los nombres de las pruebas (sin escribirlas todavía), dónde se prueba cada una (endpoint, servicio, componente…; preferir el nivel más alto práctico) y cuáles quedan como **verificación manual**. La lista es la especificación: la aprueba el usuario.
+   - **Datos de un negocio (ACC-04):** si la historia lee o cambia datos que pertenecen a un negocio (servicios, citas, clientes…), el negocio sale de la sesión, nunca de un parámetro del navegador, y la lista incluye siempre la prueba "con el id de algo de otro negocio, la respuesta es 'no encontrado' y no se ve ni se cambia nada", para cada ruta que reciba un id.
 6. **Desarrollar en ciclos pequeños.** Una prueba a la vez: escribirla, mostrar que falla, escribir el código mínimo que la hace pasar y mostrar que pasa. Esto incluye la base de datos y las migraciones, el dominio, la API, la UI y los correos que la prueba exija; nada más.
    - El valor esperado de una prueba sale del criterio, nunca se calcula con la misma lógica del código.
    - Se prueba el comportamiento por la interfaz pública, no los detalles internos.
