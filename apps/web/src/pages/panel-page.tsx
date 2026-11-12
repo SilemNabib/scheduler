@@ -1,7 +1,8 @@
 import { useClerk } from "@clerk/react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router";
 import { CenteredMessage } from "@/components/centered-message";
+import { Notice } from "@/components/notice";
 import { Loading, RequireSignedIn } from "@/components/require-signed-in";
 import { SignOutButton } from "@/components/sign-out-button";
 import { Button } from "@/components/ui/button";
@@ -94,27 +95,6 @@ function SignedInPanel() {
         <h1 className="text-2xl font-semibold">Panel</h1>
       </main>
     </div>
-  );
-}
-
-/**
- * One-time message after another page's action. It takes focus when it
- * appears, so screen readers read it (a live region that is already filled
- * when inserted is usually not announced).
- */
-function Notice({ children }: { children: string }) {
-  const ref = useRef<HTMLParagraphElement>(null);
-  useEffect(() => ref.current?.focus(), []);
-
-  return (
-    <p
-      ref={ref}
-      tabIndex={-1}
-      role="status"
-      className="w-full rounded-md border px-4 py-3 text-sm font-medium outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
-    >
-      {children}
-    </p>
   );
 }
 

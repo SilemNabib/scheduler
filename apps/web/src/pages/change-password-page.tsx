@@ -1,11 +1,12 @@
 import { esES } from "@clerk/localizations";
 import { useReverification, useUser } from "@clerk/react";
 import { isClerkAPIResponseError, isReverificationCancelledError } from "@clerk/react/errors";
-import { type FormEvent, useEffect, useState } from "react";
+import { type FormEvent, useState } from "react";
 import { Link, useNavigate } from "react-router";
+import { FormField } from "@/components/form-field";
 import { RequireSignedIn } from "@/components/require-signed-in";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { useFocusFirstError } from "@/lib/use-focus-first-error";
 import type { PanelNotice } from "./panel-page";
 
 type Field = "currentPassword" | "newPassword" | "confirmPassword";
@@ -79,11 +80,7 @@ function ChangePasswordForm() {
   const [formError, setFormError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
 
-  // Move focus to the first field with an error, so screen readers read it.
-  useEffect(() => {
-    const first = FIELDS.find((field) => errors[field]);
-    if (first) document.getElementById(first)?.focus();
-  }, [errors]);
+  useFocusFirstError(errors, FIELDS);
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -122,19 +119,22 @@ function ChangePasswordForm() {
       </div>
 
       <form className="flex flex-col gap-4" onSubmit={onSubmit} noValidate>
-        <PasswordField
+        <FormField
+          type="password"
           name="currentPassword"
           label="Contraseña actual"
           autoComplete="current-password"
           error={errors.currentPassword}
         />
-        <PasswordField
+        <FormField
+          type="password"
           name="newPassword"
           label="Nueva contraseña"
           autoComplete="new-password"
           error={errors.newPassword}
         />
-        <PasswordField
+        <FormField
+          type="password"
           name="confirmPassword"
           label="Confirmar la nueva contraseña"
           autoComplete="new-password"
@@ -156,40 +156,5 @@ function ChangePasswordForm() {
         Volver al panel
       </Link>
     </main>
-  );
-}
-
-function PasswordField({
-  name,
-  label,
-  autoComplete,
-  error,
-}: {
-  name: Field;
-  label: string;
-  autoComplete: string;
-  error?: string;
-}) {
-  const errorId = `${name}-error`;
-  return (
-    <div className="flex flex-col gap-2">
-      <label htmlFor={name} className="text-sm font-medium">
-        {label}
-      </label>
-      <Input
-        id={name}
-        name={name}
-        type="password"
-        autoComplete={autoComplete}
-        aria-required="true"
-        aria-invalid={error ? true : undefined}
-        aria-describedby={error ? errorId : undefined}
-      />
-      {error && (
-        <p id={errorId} className="text-sm text-destructive">
-          {error}
-        </p>
-      )}
-    </div>
   );
 }
