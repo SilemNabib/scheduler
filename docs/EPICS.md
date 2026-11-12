@@ -121,9 +121,12 @@ Como **dueño**, quiero entrar con mi correo y contraseña y cerrar sesión cuan
 - Sin sesión, `/panel` redirige a `/login`. Al cerrar sesión se vuelve a `/login`.
 - Un usuario con sesión válida pero sin negocio asignado ve la pantalla "sin acceso".
 
-**ACC-03. Recuperar y cambiar mi contraseña** · MVP
+**✅ ACC-03. Recuperar y cambiar mi contraseña** · MVP
 Como **dueño**, quiero cambiar mi contraseña y recuperarla si la olvido, para no perder el acceso a mi agenda.
-- El cambio y la recuperación funcionan por correo, sin intervención del administrador.
+- Ninguna de las dos requiere al administrador.
+- Recuperar: en `/login`, "¿Olvidaste tu contraseña?" envía un código al correo; con él defino una contraseña nueva y entro a mi panel.
+- Cambiar: en el panel, con la contraseña actual y la nueva (dos veces). Si sale bien, vuelvo al panel con el aviso "Contraseña actualizada." y mis demás sesiones se cierran.
+- Si la contraseña actual es incorrecta, la nueva no cumple las reglas o no coincide con la confirmación, el error aparece junto al campo y la contraseña no cambia.
 
 **ACC-04. Ver solo los datos de mi negocio** · MVP
 Como **dueño**, quiero que el panel me muestre únicamente la información de mi negocio, para que mis datos y los de mis clientes no se mezclen con los de otros.

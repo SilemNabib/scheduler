@@ -1,5 +1,6 @@
 import { createBrowserRouter } from "react-router";
 import { ClerkRoot } from "./clerk-root";
+import { ChangePasswordPage } from "./pages/change-password-page";
 import { HomePage } from "./pages/home-page";
 import { LoginPage } from "./pages/login-page";
 import { NotFoundPage } from "./pages/not-found-page";
@@ -13,6 +14,7 @@ export const router = createBrowserRouter([
       // The Clerk sign-in flow uses sub-paths (/login/factor-one, ...).
       { path: "/login/*", element: <LoginPage /> },
       { path: "/panel", element: <PanelPage /> },
+      { path: "/panel/contrasena", element: <ChangePasswordPage /> },
       { path: "*", element: <NotFoundPage /> },
     ],
   },
