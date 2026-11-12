@@ -2,6 +2,7 @@ import { SignIn, useAuth } from "@clerk/react";
 import { Navigate } from "react-router";
 import { CenteredMessage } from "@/components/centered-message";
 import { Loading } from "@/components/require-signed-in";
+import { SignOutButton } from "@/components/sign-out-button";
 import { Button } from "@/components/ui/button";
 import { useAdminCheck } from "@/lib/use-is-admin";
 
@@ -17,7 +18,11 @@ export function LoginPage() {
         <CenteredMessage>
           <h1 className="text-xl font-semibold">No pudimos completar el ingreso</h1>
           <p className="text-muted-foreground">Revisa tu conexión e inténtalo de nuevo.</p>
-          <Button onClick={admin.retry}>Reintentar</Button>
+          <div className="flex gap-2">
+            <Button onClick={admin.retry}>Reintentar</Button>
+            {/* So nobody is stuck here with a session they cannot leave. */}
+            <SignOutButton />
+          </div>
         </CenteredMessage>
       );
     }
